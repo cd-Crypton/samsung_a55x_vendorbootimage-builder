@@ -44,7 +44,7 @@ jobs:
     - name: Download a copy of vendor_boot.img (twrp)
       run: |
         wget https://github.com/cd-Crypton/samsung_a55x_vendor_boot_builder/releases/download/9737473621/vendor_boot.img
-        mv vendor_boot.img workspace/twrpk/twrp-vb.img
+        mv vendor_boot.img workspace/twrp/twrp-vb.img
 
     - name: Unpack vendor_boot.img (stock)
       run: |
