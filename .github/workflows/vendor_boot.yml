@@ -5,8 +5,8 @@ on:
 
 jobs:
   build:
-    name: Build TWRP by ${{ github.actor }}
-    runs-on: ubuntu-20.04
+    name: Build vendor_boot by ${{ github.actor }}
+    runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,3 +84,18 @@ jobs:
         tag_name: ${{ github.run_id }}
         body: |
           # TEST
+
+  recovery:
+    name: Replace vendor_ramdisk_recovery.cpio by ${{ github.actor }}
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+    - name: Download Release
+      uses: robinraju/release-downloader@v1.11
+      with:
+        releaseId: '${{ github.run_id }}'
+        fileName: 'vendor_boot.img'
