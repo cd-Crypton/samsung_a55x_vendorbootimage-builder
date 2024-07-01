@@ -102,10 +102,13 @@ jobs:
 
     - name: Prepare Workspace
       run: |
-        mkdir workspace
+        mkdir workspace; ls
         mkdir -p workspace/old
         mkdir -p workspace/new
-        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64
+        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64; ls
         chmod a+x magiskboot_x86_64
-        mv vendor_boot.img workspace/new
+        mv vendor_boot.img workspace/new; ls
+        wget https://gitlab.com/thenoobdevs2024/android_dump_samsung_a55x/-/raw/UP1A.231005.007/vendor_boot.img; ls
+        mv vendor_boot.img workspace/new; ls
+        
       
