@@ -77,7 +77,7 @@ jobs:
 
     - name: Prepare magiskboot
       run: |
-        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64; ls
+        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64
         mv magiskboot_x86_64 magiskboot
         chmod a+x magiskboot
 
@@ -120,7 +120,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: twrp-vendor_boot.tar
-        name: Unofficial TWRP for a55x $ // ${{ env.BUILD_DATE }}
+        name: Unofficial TWRP for a55x // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}-patched
         body: |
-          # TEST
+          # Flashable TWRP for a55x
+          ## Notes
+          This twrp-vendor_boot.tar can be flash via ODIN software. This was build using a55x twrp's vendor_boot.img and stock vendor_boot.img, by replacing stock's vendor_ramdisk_recovery.cpio using vendor_ramdisk_recovery.cpio from TWRP build.
