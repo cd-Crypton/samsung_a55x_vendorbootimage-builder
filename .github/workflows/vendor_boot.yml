@@ -62,7 +62,7 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd android-recovery
-        git clone https://github.com/TheNoobDevs/android_device_samsung_a55x -b twrp-12.1 ./device/samaung/a55x
+        git clone https://github.com/TheNoobDevs/android_device_samsung_a55x -b twrp-12.1 ./device/samsung/a55x
       
     - name: Building Image 
       run: |
