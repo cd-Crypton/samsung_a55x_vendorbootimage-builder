@@ -23,6 +23,13 @@ jobs:
       uses: pierotofy/set-swap-space@master
       with:
         swap-size-gb: 12
+
+    - name: Set up ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ runner.os }}-${{ github.sha }}
+        restore-keys: ${{ runner.os }}
+        max-size: 10000M
         
     - name: Prepare the environment
       run: |
