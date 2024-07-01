@@ -2,7 +2,24 @@ name: VENDOR_BOOT - TWRP
 
 on:
   workflow_dispatch:
-
+    inputs:
+      DEVICE_TREE:
+        description: 'Device Tree URL eg. https://github.com/<owner>/<repo>'
+        required: true
+        default: 'https://github.com/TheNoobDevs/android_device_samsung_a55x'
+      DEVICE_BRANCH:
+        description: 'Device Tree Branch, eg. twrp-12.1'
+        required: true
+        default: 'twrp-12.1'
+      DEVICE_PATH:
+        description: 'Device Path, eg. device/vendor/codename'
+        required: true
+        default: 'device/samsung/a55x'
+      DEVICE_MAKEFILE:
+        description: 'Device Makefile, eg. twrp_codename'
+        required: true
+        default: 'twrp_a55x'
+        
 jobs:
   build:
     name: Build vendor_boot by ${{ github.actor }}
@@ -62,14 +79,14 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd android-recovery
-        git clone https://github.com/TheNoobDevs/android_device_samsung_a55x -b twrp-12.1 ./device/samsung/a55x
+        git clone ${{ inputs.DEVICE_TREE }} -b ${{ inputs.DEVICE_BRANCH }} ./${{ inputs.DEVICE_PATH }}
       
     - name: Building Image 
       run: |
         cd android-recovery
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch twrp_a55x-eng && make clean && make vendorbootimage -j$(nproc --all)
+        lunch ${{ inputs.DEVICE_MAKEFILE }}-eng && make clean && make vendorbootimage -j$(nproc --all)
       
     - name: Set Build Date # Output will be use in Release
       run: |
