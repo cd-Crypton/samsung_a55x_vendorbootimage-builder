@@ -85,46 +85,50 @@ jobs:
         body: |
           # TEST
 
-  recovery:
-    name: Replace vendor_ramdisk_recovery.cpio by ${{ github.actor }}
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event.repository.owner.id == github.event.sender.id
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
-    steps:
-    - name: Download Release
-      uses: robinraju/release-downloader@v1.11
-      with:
-        releaseId: '${{ github.run_id }}'
-        fileName: 'vendor_boot.img'
+    - name: Prepare magiskboot
+      run: |
+        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64; ls
+        mv magiskboot_x86_64 magiskboot
+        chmod a+x magiskboot
 
-    - name: Prepare Workspace
+    - name: Prepare workspace
       run: |
         mkdir workspace; ls
         mkdir -p workspace/stock/unpack
         mkdir -p workspace/twrp/unpack
-        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64; ls
-        chmod a+x magiskboot_x86_64
-        mv vendor_boot.img workspace/new; ls
-        wget https://gitlab.com/thenoobdevs2024/android_dump_samsung_a55x/-/raw/UP1A.231005.007/vendor_boot.img; ls
-        mv vendor_boot.img workspace/old; ls
-        cd workspace/stock/unpack
-        ../../../magiskboot unpack ../vendor_boot.img
-        cd ../../twrp/unpack
-        ../../../magiskboot unpack ../vendor_boot.img
-        cd ../..
-        mv twrp/vendor_ramdisk_recovery.cpio stock/
-        cd stock/unpack
-        ../../../magiskboot repack ../vendor_boot.img new-vendor_boot.img
-        mv new-vendor_boot.img ../../../vendor_boot.img
+
+    - name: Download a copy of vendor_boot.img (stock)
+      run: |
+        wget https://gitlab.com/thenoobdevs2024/android_dump_samsung_a55x/-/raw/UP1A.231005.007/vendor_boot.img
+        mv vendor_boot.img workspace/stock/stock-vb.img
+
+    - name: Make a copy of vendor_boot.img (twrp)
+      run: |
+        cp android-recovery/out/target/product/a55x/vendor_boot.img workspace/twrp/twrp-vb.img
+
+    - name: Unpack vendor_boot.img (stock)
+      run: |
+        cd ${GITHUB_WORKSPACE}/workspace/stock/unpack
+        ${GITHUB_WORKSPACE}/magiskboot unpack ../stock-vb.img
+        
+    - name: Unpack vendor_boot.img (twrp)
+      run: |
+        cd ${GITHUB_WORKSPACE}/workspace/twrp/unpack
+        ${GITHUB_WORKSPACE}/magiskboot unpack ../twrp-vb.img
+
+    - name: Replace vendor_ramdisk_recovery.cpio (twrp > stock)
+      run: |
+        cd ${GITHUB_WORKSPACE}/workspace
+        mv twrp/unpack/vendor_ramdisk_recovery.cpio stock/unpack
+        cd ${GITHUB_WORKSPACE}/workspace/stock/unpack
+        ${GITHUB_WORKSPACE}/magiskboot repack ${GITHUB_WORKSPACE}/workspace/stock/stock-vb.img new-vendor_boot.img
+        mv new-vendor_boot.img ${GITHUB_WORKSPACE}/vendor_boot.img
+        tar -cvf twrp-vendor_boot.tar vendor_boot.img
     
     - name: Upload to Release
       uses: softprops/action-gh-release@v2
       with:
-        files: vendor_boot.img
+        files: twrp-vendor_boot.tar
         name: Unofficial TWRP for a55x $ // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}-patched
         body: |
