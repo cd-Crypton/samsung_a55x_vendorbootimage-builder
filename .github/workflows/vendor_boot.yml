@@ -99,3 +99,13 @@ jobs:
       with:
         releaseId: '${{ github.run_id }}'
         fileName: 'vendor_boot.img'
+
+    - name: Prepare Workspace
+      run: |
+        mkdir workspace
+        mkdir -p workspace/old
+        mkdir -p workspace/new
+        wget https://github.com/TeamWin/external_magisk-prebuilt/raw/android-12.1/prebuilt/magiskboot_x86_64
+        chmod a+x magiskboot_x86_64
+        mv vendor_boot.img workspace/new
+      
