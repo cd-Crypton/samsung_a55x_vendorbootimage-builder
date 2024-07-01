@@ -1,4 +1,4 @@
-name: VENDOR_BOOT - TWRP
+name: VENDOR_BOOT - TWRP 2
 
 on:
   workflow_dispatch:
@@ -15,14 +15,6 @@ jobs:
     steps:
     - name: Check Out
       uses: actions/checkout@v4
-
-    - name: Cleanup
-      uses: rokibhasansagar/slimhub_actions@main
-      
-    - name: Set Swap Space
-      uses: pierotofy/set-swap-space@master
-      with:
-        swap-size-gb: 12
         
     - name: Prepare the environment
       run: |
