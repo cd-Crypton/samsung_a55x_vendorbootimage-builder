@@ -3,6 +3,7 @@
 Device: a55x
 Vendor: Samsung
 Recovery: recovery-as-vendor_boot (vendor_ramdisk_recovery)
+Header: Version 4
 ```
 Workflows Process:
 1. This github action compile a vendor_boot image using TWRP source and [a55x-twrp-tree](https://github.com/TheNoobDevs/android_device_samsung_a55x).
